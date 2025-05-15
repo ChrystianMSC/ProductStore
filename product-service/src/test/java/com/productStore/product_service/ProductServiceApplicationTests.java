@@ -2,8 +2,10 @@ package com.productStore.product_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
-@SpringBootTest(classes = ProductServiceApplication.class)
+@Import(TestcontainersConfiguration.class)
+@SpringBootTest
 class ProductServiceApplicationTests {
 
 	@Test
