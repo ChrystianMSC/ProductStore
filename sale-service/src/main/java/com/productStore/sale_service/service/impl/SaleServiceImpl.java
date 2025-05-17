@@ -25,7 +25,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public SaleDTO getSale(Long id) {
-        return mapper.toDTO(repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
+        return mapper.toDTO(repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Sale not found")));
     }
 
     @Override
