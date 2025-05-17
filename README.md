@@ -36,7 +36,7 @@ Ensure you have the following installed on your system:
 
 This command will build the Docker images and start all the services defined in the `docker-compose.yml` file.
 
-Them you can move to the next-products-app directory and run 
+Them you can move to the next-products-app directory in another terminal and run:
 
    ```bash
    npm i
