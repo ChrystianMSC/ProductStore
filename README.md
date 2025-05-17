@@ -36,6 +36,13 @@ Ensure you have the following installed on your system:
 
 This command will build the Docker images and start all the services defined in the `docker-compose.yml` file.
 
+Them you can move to the next-products-app directory and run 
+
+   ```bash
+   npm i
+   npm run dev
+   ```
+
 3. **Access the application:**
 
    * Frontend (Next.js app): [http://localhost:3000](http://localhost:3000)
