@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.productStore.client_service.dto.ClientDTO;
 import com.productStore.client_service.service.ClientService;
+import com.productStore.client_service.mapper.ClientMapper;
+import com.productStore.client_service.repository.ClientRepository;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,34 +31,36 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClientController {
     private final ClientService service;
+    private final ClientMapper mapper;
+    private final ClientRepository repo;
 
-    @Operation(summary = "Get sale by ID", description = "Retrieve sale details by sale ID")
+    @Operation(summary = "Get client by ID", description = "Retrieve client details by client ID")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "sale found and returned"),
-        @ApiResponse(responseCode = "404", description = "sale with given ID not found")
+        @ApiResponse(responseCode = "200", description = "client found and returned"),
+        @ApiResponse(responseCode = "404", description = "client with given ID not found")
     })
     @GetMapping("/{id}")
     public ClientDTO get(
-        @Parameter(description = "ID of the sale to retrieve", required = true, example = "1")
+        @Parameter(description = "ID of the client to retrieve", required = true, example = "1")
         @PathVariable Long id) {
         return service.getClient(id);
     }
 
-    @Operation(summary = "Get all sales", description = "Retrieve a list of all sales")
-    @ApiResponse(responseCode = "200", description = "List of sales returned")
+    @Operation(summary = "Get all clients", description = "Retrieve a list of all clients")
+    @ApiResponse(responseCode = "200", description = "List of clients returned")
     @GetMapping
     public List<ClientDTO> getAll() {
         return service.getAllClients();
     }
 
-    @Operation(summary = "Delete a sale", description = "Delete the sale identified by ID")
+    @Operation(summary = "Delete a client", description = "Delete the client identified by ID")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "sale successfully deleted"),
-        @ApiResponse(responseCode = "404", description = "sale with given ID not found")
+        @ApiResponse(responseCode = "204", description = "client successfully deleted"),
+        @ApiResponse(responseCode = "404", description = "client with given ID not found")
     })
     @DeleteMapping("/{id}")
     public void delete(
-        @Parameter(description = "ID of the sale to delete", required = true, example = "1")
+        @Parameter(description = "ID of the client to delete", required = true, example = "1")
         @PathVariable Long id) {
         service.deleteClient(id);
     }
@@ -76,10 +81,19 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody ClientDTO ClientDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody ClientDTO clientDTO) {
         try {
-            String token = service.authenticate(ClientDTO.getUsername(), ClientDTO.getPassword());
-            return ResponseEntity.ok().body(Map.of("token", token));
+            String token = service.authenticate(clientDTO.getUsername(), clientDTO.getPassword());
+
+            ClientDTO client = mapper.toDTO(
+                repo.findByUsername(clientDTO.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"))
+            );
+
+            return ResponseEntity.ok().body(Map.of(
+                "token", token,
+                "id", client.getId()
+            ));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }

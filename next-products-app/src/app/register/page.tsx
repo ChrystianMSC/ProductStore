@@ -1,50 +1,22 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-import { useAuth } from './context/AuthContext';
-
-interface LoginForm {
-  username: string;
-  password: string;
-}
-
-const Login = () => {
-  const [form, setForm] = useState<LoginForm>({ username: '', password: '' });
-  const { setUser } = useAuth();
+const Register = () => {
+  const [form, setForm] = useState({ username: '', password: '' });
   const router = useRouter();
 
-  const handleLogin = async () => {
-    try {
-      const res = await axios.post('http://localhost:8083/api/clients/login', form);
-      const token = res.data.token;
-      const id = res.data.id;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', id);
-
-      console.log(res.data);
-      
-      setUser(res.data);
-      router.push('/dashboard');
-    } catch (error) {
-      alert('Login failed. Please check your credentials.');
-    }
-  };
-
-  const handleSignup = async () => {
-    try {
-      router.push('/register');
-    } catch (error) {
-      alert(error);
-    }
+  const handleRegister = async () => {
+    await axios.post('http://localhost:8083/api/clients/register', form);
+    router.push('/');
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.loginBox}>
-        <h1 style={styles.title}>Welcome Back</h1>
+        <h1 style={styles.title}>Register now</h1>
         <input
           style={styles.input}
           placeholder="Username"
@@ -58,18 +30,16 @@ const Login = () => {
           placeholder="Password"
           value={form.password}
           onChange={e => setForm({ ...form, password: e.target.value })}
-          onKeyDown={e => e.key === 'Enter' && handleLogin()}
+          onKeyDown={e => e.key === 'Enter' && handleRegister()}
         />
-        <button style={styles.button} onClick={handleLogin}>
-          Log In
-        </button>
-        <button style={styles.button2} onClick={handleSignup}>
+        <button style={styles.button} onClick={handleRegister}>
           Signup
         </button>
       </div>
     </div>
   );
 };
+
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -123,17 +93,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
   },
-  button2: {
-    backgroundColor: '#404040',
-    border: 'none',
-    borderRadius: '12px',
-    padding: '1rem',
-    fontWeight: '600',
-    fontSize: '1.1rem',
-    color: '#ffd186',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-  },
 };
 
-export default Login;
+
+export default Register;
