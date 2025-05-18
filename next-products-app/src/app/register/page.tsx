@@ -14,86 +14,35 @@ const Register = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.loginBox}>
-        <h1 style={styles.title}>Register now</h1>
+    <div className="h-screen bg-[radial-gradient(circle_at_top_left,_#3b3b3f,_#1a1a1d)] flex justify-center items-center font-['Roboto']">
+      <div className="bg-black/90 rounded-2xl p-12 shadow-[0_0_30px_rgba(255,215,165,0.3),_0_0_15px_rgba(255,215,165,0.15)] min-w-[320px] max-w-[400px] flex flex-col gap-6 text-gray-100">
+        <h1 className="font-bold text-3xl tracking-wide mb-4 text-center text-[#ffd186]">
+          Register now
+        </h1>
         <input
-          style={styles.input}
+          className="bg-[#1f1f23] border-none rounded-xl p-4 text-base text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ffd186] transition duration-300"
           placeholder="Username"
           value={form.username}
           onChange={e => setForm({ ...form, username: e.target.value })}
           autoFocus
         />
         <input
-          style={styles.input}
+          className="bg-[#1f1f23] border-none rounded-xl p-4 text-base text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ffd186] transition duration-300"
           type="password"
           placeholder="Password"
           value={form.password}
           onChange={e => setForm({ ...form, password: e.target.value })}
           onKeyDown={e => e.key === 'Enter' && handleRegister()}
         />
-        <button style={styles.button} onClick={handleRegister}>
+        <button
+          className="bg-[#ffd186] rounded-xl p-4 font-semibold text-lg text-[#1a1a1d] hover:bg-[#f5c670] transition duration-300"
+          onClick={handleRegister}
+        >
           Signup
         </button>
       </div>
     </div>
   );
 };
-
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    height: '100vh',
-    background:
-      'radial-gradient(circle at top left, #3b3b3f, #1a1a1d)', // dark gradient similar to image
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontFamily: "'Roboto', sans-serif",
-  },
-  loginBox: {
-    backgroundColor: 'rgba(20, 20, 20, 0.9)',
-    borderRadius: '16px',
-    padding: '3rem 4rem',
-    boxShadow:
-      '0 0 30px rgba(255, 215, 165, 0.3), 0 0 15px rgba(255, 215, 165, 0.15)', // subtle gold glow like red gold from image
-    minWidth: '320px',
-    maxWidth: '400px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem',
-    color: '#eee',
-  },
-  title: {
-    fontWeight: '700',
-    fontSize: '2rem',
-    letterSpacing: '1.2px',
-    marginBottom: '1rem',
-    color: '#ffd186', // gold highlight color
-    textAlign: 'center',
-  },
-  input: {
-    backgroundColor: '#1f1f23',
-    border: 'none',
-    borderRadius: '10px',
-    padding: '1rem',
-    fontSize: '1rem',
-    color: '#ddd',
-    outlineColor: '#ffd186',
-    transition: 'outline-color 0.3s ease',
-  },
-  button: {
-    backgroundColor: '#ffd186',
-    border: 'none',
-    borderRadius: '12px',
-    padding: '1rem',
-    fontWeight: '600',
-    fontSize: '1.1rem',
-    color: '#1a1a1d',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-  },
-};
-
 
 export default Register;

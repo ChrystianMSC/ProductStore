@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   username: string;
-  [key: string]: any; // Add more fields if needed
+  [key: string]: any;
 }
 
 interface AuthContextType {
