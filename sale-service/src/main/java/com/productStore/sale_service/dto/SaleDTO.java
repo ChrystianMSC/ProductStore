@@ -23,6 +23,9 @@ public class SaleDTO {
     @Schema(description = "Unique identifier of the product", example = "1", required = true)
     private Long productId;
 
+    @Schema(description = "Name of the product", example = "Wireles Mouse", required = true)
+    private String productName;
+
     @Schema(description = "Quantity of the product that was bought", example = "100", required = true)
     private int quantity;
 

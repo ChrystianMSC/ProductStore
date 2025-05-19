@@ -12,15 +12,20 @@ interface Product {
 }
 
 interface Sale {
+  id: number;
+  clientId: number
   productId: number;
+  productName: string;
   quantity: number;
+  saleDate: string;
 }
 
 const UserPanel = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [purchaseQuantities, setPurchaseQuantities] = useState<Record<number, number>>({});
-  const [purchasedProducts, setPurchasedProducts] = useState<Sale[]>([]);
-  const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [purchaseQuantities, setPurchaseQuantities] = useState<Record<number, number>>({})
+  const [loading, setLoading] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState<number | null>(null); // for per-product actions
 
   const clientId = parseInt(localStorage.getItem('user') || '0');
 
@@ -28,11 +33,33 @@ const UserPanel = () => {
     axios.get<Product[]>('http://localhost:8081/api/products').then(res => setProducts(res.data));
   }, []);
 
+  useEffect(() => {
+    axios.get<Sale[]>('http://localhost:8082/api/sales')
+      .then(res => {
+        console.log('All Sales:', res.data); 
+        const filteredSales = res.data.filter(sale => sale.clientId === clientId);
+        setSales(filteredSales);
+      })
+      .catch(err => {
+        console.error('Error fetching sales:', err);
+      });
+  }, []);
 
-  const handleBuy = async (productId: number) => {
+
+  const deleteProduct = async (id: number) => {
+    setLoadingProductId(id);
+    try {
+      await axios.delete(`http://localhost:8081/api/products/${id}`);
+      setProducts(products.filter(p => p.id !== id));
+    } finally {
+      setLoadingProductId(null);
+    }
+  };
+
+  const handleBuy = async (productId: number, productName: string) => {
     const quantity = purchaseQuantities[productId] || 0;
     if (quantity <= 0) return alert("Enter a valid quantity.");
-
+    
     const product = products.find(p => p.id === productId);
     if (!product || quantity > product.stock) return alert("Not enough stock.");
 
@@ -41,24 +68,26 @@ const UserPanel = () => {
 
     setLoadingProductId(productId);
     try {
-      await axios.post('http://localhost:8082/api/sales', {
+      const res = await axios.post('http://localhost:8082/api/sales', {
         clientId,
         productId,
+        productName,
         quantity
       });
-
       const updatedProduct = {
         ...product,
         stock: product.stock - quantity
       };
-
-      const res = await axios.put<Product>(
-        `http://localhost:8081/api/products/${productId}`,
-        updatedProduct
-      );
-
-      setProducts(products.map(p => p.id === productId ? res.data : p));
-      setPurchasedProducts([...purchasedProducts, { productId, quantity }]);
+      if (updatedProduct.stock <= 0) {
+        deleteProduct(productId);
+      }else{
+        const resUpdate = await axios.put<Product>(
+          `http://localhost:8081/api/products/${productId}`,
+          updatedProduct
+        );
+        setProducts(products.map(p => p.id === productId ? resUpdate.data : p));
+      }
+      setSales([...sales, res.data]);
     } finally {
       setLoadingProductId(null);
     }
@@ -92,7 +121,7 @@ const UserPanel = () => {
                     />
                     <button
                       className="bg-green-600 px-4 py-1 rounded hover:bg-green-700 disabled:opacity-50"
-                      onClick={() => handleBuy(p.id)}
+                      onClick={() => handleBuy(p.id, p.name)}
                       disabled={loadingProductId === p.id}
                     >
                       {loadingProductId === p.id ? 'Buying...' : 'Buy'}
@@ -100,7 +129,6 @@ const UserPanel = () => {
                   </div>
                 </div>
                 <div className="mt-2 md:mt-0 flex gap-4">
-                  
                 </div>
               </li>
             ))}
@@ -111,13 +139,21 @@ const UserPanel = () => {
       <div className="w-full md:w-1/3 bg-gray-900/60 p-6 rounded-2xl shadow-lg backdrop-blur-sm">
         <h2 className="text-xl font-semibold mb-4">Your Purchases</h2>
         <ul className="space-y-2 text-sm text-gray-300">
-          {purchasedProducts.map((purchase, i) => {
-            const product = products.find(p => p.id === purchase.productId);
-            return product ? (
-              <li key={i} className="bg-gray-800 p-3 rounded-lg shadow-sm">
-                {product.name} — {purchase.quantity} pcs
+          {sales.map(sale => {
+            const date = new Date(sale.saleDate);
+            const formattedDate = date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            return (
+              <li key={sale.id} className="bg-gray-800 p-3 rounded-lg shadow-sm">
+                {sale.productName} — {sale.quantity} pcs — {formattedDate}
               </li>
-            ) : null;
+            );
           })}
         </ul>
       </div>

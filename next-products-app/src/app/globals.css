@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* Hide Next.js studio icon or dev overlay */
+div[data-nextjs-dev-overlay] {
+  display: none !important;
+}
+
+a[href="https://nextjs.org"] {
+  display: none !important;
+}

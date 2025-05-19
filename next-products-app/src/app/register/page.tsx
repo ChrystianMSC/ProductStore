@@ -20,14 +20,14 @@ const Register = () => {
           Register now
         </h1>
         <input
-          className="bg-[#1f1f23] border-none rounded-xl p-4 text-base text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ffd186] transition duration-300"
+          className="bg-[#1f1f23] border-none rounded-xl p-4 text-base text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff6900] transition duration-300"
           placeholder="Username"
           value={form.username}
           onChange={e => setForm({ ...form, username: e.target.value })}
           autoFocus
         />
         <input
-          className="bg-[#1f1f23] border-none rounded-xl p-4 text-base text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ffd186] transition duration-300"
+          className="bg-[#1f1f23] border-none rounded-xl p-4 text-base text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff6900] transition duration-300"
           type="password"
           placeholder="Password"
           value={form.password}
@@ -35,7 +35,7 @@ const Register = () => {
           onKeyDown={e => e.key === 'Enter' && handleRegister()}
         />
         <button
-          className="bg-[#ffd186] rounded-xl p-4 font-semibold text-lg text-[#1a1a1d] hover:bg-[#f5c670] transition duration-300"
+          className="bg-[#ff6900] rounded-xl p-4 font-semibold text-lg text-[#1a1a1d] hover:bg-[#f5c670] transition duration-300"
           onClick={handleRegister}
         >
           Signup

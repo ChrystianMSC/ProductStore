@@ -7,6 +7,6 @@ import com.productStore.sale_service.entity.Sale;
 
 @Mapper(componentModel = "spring")
 public interface SaleMapper {
-    SaleDTO toDTO(Sale product);
+    SaleDTO toDTO(Sale sale);
     Sale toEntity(SaleDTO dto);
 }

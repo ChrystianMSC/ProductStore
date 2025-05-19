@@ -28,6 +28,7 @@ public class Sale {
 
     private Long clientId;
     private Long productId;
+    private String productName;
     private int quantity;
 
     @Temporal(TemporalType.TIMESTAMP)
