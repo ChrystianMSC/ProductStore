@@ -2,7 +2,9 @@
 
 ProductStore is a microservices-based application designed to manage products, clients, and sales. It leverages a combination of Java Spring Boot services and a Next.js frontend, orchestrated using Docker Compose for seamless development and deployment.
 
-## 🧱 Project Structure
+To demonstrate security, the first user created can perfor CRUD operations while the rest of the users can just buy products.
+
+## Project Structure
 
 * **product-service**: Handles product-related operations.
 * **client-service**: Manages client information and interactions.
@@ -10,7 +12,7 @@ ProductStore is a microservices-based application designed to manage products, c
 * **next-products-app**: Frontend application built with Next.js.
 * **docker-compose.yml**: Defines and manages multi-container Docker applications.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -52,7 +54,7 @@ Them you can move to the next-products-app directory in another terminal and run
 
    Ensure these ports are not occupied by other applications.
 
-## 🛠️ Development
+## Development
 
 To work on individual services:
 
@@ -80,7 +82,7 @@ Repeat the above steps for `client-service` and `sale-service` as needed.
 
 This will start the Next.js development server on [http://localhost:3000](http://localhost:3000).
 
-## 🧪 Testing
+## Testing
 
 Each service includes its own set of tests. To run tests for a specific service:
 
